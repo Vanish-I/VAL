@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="VAL.App/VAL.App.csproj" />
+  <Project Path="VAL.Core/VAL.Core.csproj" />
+  <Project Path="VAL.Infrastructure/VAL.Infrastructure.csproj" />
+  <Project Path="VAL.Tests/VAL.Tests.csproj" />
+</Solution>
