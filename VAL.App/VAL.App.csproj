@@ -9,6 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\val-logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\val-logo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\VAL.Core\VAL.Core.csproj" />
     <ProjectReference Include="..\VAL.Infrastructure\VAL.Infrastructure.csproj" />
     <ProjectReference Include="..\VAL.Tests\VAL.Tests.csproj" />
