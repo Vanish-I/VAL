@@ -10,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Controls;
 using System.Windows.Media;
 using VAL.Infrastructure.Storage;
+using System.Linq;
 
 namespace VAL.App;
 
@@ -73,10 +74,25 @@ public partial class MainWindow : Window
             settings.GamePath = "";
         }
 
+        // Восстанавливаем последний список модов
+        if (settings.Mods != null)
+        {
+            foreach (var mod in settings.Mods)
+            {
+                mods.Add(mod);
+            }
+        }
+
         ApplyFilters();
+
+        // Автоматически выбираем первый мод
+        if (ModsGrid.Items.Count > 0)
+        {
+            ModsGrid.SelectedIndex = 0;
+        }
     }
 
-private void UpdateGamePaths(string path)
+    private void UpdateGamePaths(string path)
 {
     gamePath = path;
 
@@ -163,6 +179,11 @@ private void UpdateGamePaths(string path)
                 mods.Add(mod);
             }
         }
+        // Сохраняем последний результат сканирования
+        settings.GamePath = gamePath ?? "";
+        settings.Mods = mods.ToList();
+
+        dataService.Save(settings);
 
         MessageBox.Show(
             $"Найдено модов: {mods.Count}");
