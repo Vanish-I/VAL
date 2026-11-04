@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <Folder Include="Game\" />
-    <Folder Include="Storage\" />
     <Folder Include="Updates\" />
   </ItemGroup>
 

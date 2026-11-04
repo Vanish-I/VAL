@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Controls;
 using System.Windows.Media;
+using VAL.Infrastructure.Storage;
 
 namespace VAL.App;
 
@@ -45,6 +46,8 @@ public partial class MainWindow : Window
     private string? gamePath;
     private string? workshopPath;
     private ICollectionView? modsView;
+    private readonly LauncherDataService dataService = new();
+    private LauncherSettings settings = new();
 
     private readonly ModScanner scanner = new();
 
@@ -58,9 +61,41 @@ public partial class MainWindow : Window
 
         ModsGrid.ItemsSource = modsView;
 
+        settings = dataService.Load();
+
+        if (!string.IsNullOrWhiteSpace(settings.GamePath) &&
+            File.Exists(Path.Combine(settings.GamePath, "RimWorld.exe")))
+        {
+            UpdateGamePaths(settings.GamePath);
+        }
+        else
+        {
+            settings.GamePath = "";
+        }
+
         ApplyFilters();
     }
 
+private void UpdateGamePaths(string path)
+{
+    gamePath = path;
+
+    var steamApps = new DirectoryInfo(gamePath)
+        .Parent?.Parent?.FullName;
+
+    if (steamApps != null)
+    {
+        workshopPath = Path.Combine(
+            steamApps,
+            "workshop",
+            "content",
+            "294100");
+    }
+    else
+    {
+        workshopPath = null;
+    }
+}
 
     private void SelectGame_Click(
         object sender, RoutedEventArgs e)
@@ -75,30 +110,24 @@ public partial class MainWindow : Window
 
         gamePath = dialog.FolderName;
 
+        string selectedPath = dialog.FolderName;
+
         string exe = Path.Combine(
-            gamePath, "RimWorld.exe");
+            selectedPath, "RimWorld.exe");
 
         if (!File.Exists(exe))
         {
             MessageBox.Show(
                 "RimWorld.exe не найден!\n\n" +
-                "Проверьте выбранную папку:\n" + gamePath);
+                "Проверьте выбранную папку:\n" + selectedPath);
 
-            gamePath = null;
             return;
         }
 
-        var steamApps = new DirectoryInfo(gamePath)
-            .Parent?.Parent?.FullName;
+        UpdateGamePaths(selectedPath);
 
-        if (steamApps != null)
-        {
-            workshopPath = Path.Combine(
-                steamApps,
-                "workshop",
-                "content",
-                "294100");
-        }
+        settings.GamePath = gamePath;
+        dataService.Save(settings);
 
         MessageBox.Show(
             "RimWorld успешно обнаружена!\n\n" +
