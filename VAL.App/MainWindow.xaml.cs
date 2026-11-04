@@ -11,6 +11,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using VAL.Infrastructure.Storage;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 
 namespace VAL.App;
 
@@ -57,6 +59,9 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        SourceInitialized += MainWindow_SourceInitialized;
+
+
 
         modsView = CollectionViewSource.GetDefaultView(mods);
 
@@ -351,6 +356,36 @@ private void ModsGrid_SelectionChanged(
                 FileName = mod.Path,
                 UseShellExecute = true
             });
+        }
+    }
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(
+        IntPtr hwnd,
+        int attribute,
+        ref int value,
+        int size);
+
+    private void MainWindow_SourceInitialized(
+        object? sender,
+        EventArgs e)
+    {
+        IntPtr hwnd = new WindowInteropHelper(this).Handle;
+
+        int darkMode = 1;
+
+        int result = DwmSetWindowAttribute(
+            hwnd,
+            20,
+            ref darkMode,
+            sizeof(int));
+
+        if (result != 0)
+        {
+            DwmSetWindowAttribute(
+                hwnd,
+                19,
+                ref darkMode,
+                sizeof(int));
         }
     }
 }

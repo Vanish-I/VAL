@@ -1,4 +1,5 @@
 ﻿<Window x:Class="VAL.App.MainWindow"
+        FontFamily="Microsoft Sans Serif"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="VAL Launcher"
@@ -167,7 +168,7 @@
             <Setter Property="Foreground" Value="#D6D8D9"/>
             <Setter Property="BorderBrush" Value="#30363E"/>
             <Setter Property="BorderThickness" Value="0,0,0,1"/>
-            <Setter Property="Height" Value="42"/>
+            <Setter Property="Height" Value="46"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#30363E"/>
@@ -189,6 +190,168 @@
                     <Setter Property="Foreground" Value="#FFFFFF"/>
                 </Trigger>
             </Style.Triggers>
+        </Style>
+
+        <!-- Контекстное меню -->
+        <Style x:Key="VALContextMenuStyle" TargetType="ContextMenu">
+            <Setter Property="Background" Value="#22262C"/>
+            <Setter Property="Foreground" Value="#D6D8D9"/>
+            <Setter Property="BorderBrush" Value="#41464D"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="HasDropShadow" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContextMenu">
+                        <Border Background="#22262C"
+                        BorderBrush="#41464D"
+                        BorderThickness="1"
+                        CornerRadius="5"
+                        Padding="5"
+                        SnapsToDevicePixels="True">
+                            <StackPanel IsItemsHost="True"
+                                KeyboardNavigation.DirectionalNavigation="Cycle"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Пункты контекстного меню -->
+        <Style x:Key="VALMenuItemStyle" TargetType="MenuItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#D6D8D9"/>
+            <Setter Property="Padding" Value="12,9"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border x:Name="ItemBorder"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="4"
+                        Padding="{TemplateBinding Padding}">
+                            <ContentPresenter ContentSource="Header"
+                                      RecognizesAccessKey="True"
+                                      VerticalAlignment="Center"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="ItemBorder"
+                                Property="Background"
+                                Value="#493A2B"/>
+                                <Setter Property="Foreground"
+                                Value="#D58A36"/>
+                            </Trigger>
+
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Разделители -->
+        <Style x:Key="VALMenuSeparatorStyle" TargetType="Separator">
+            <Setter Property="Height" Value="1"/>
+            <Setter Property="Margin" Value="5,3"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Separator">
+                        <Border Height="1"
+                        Background="#41464D"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- VAL ScrollBar Style -->
+<Style TargetType="{x:Type ScrollBar}">
+    <Setter Property="Width" Value="12"/>
+    <Setter Property="Background" Value="#17191D"/>
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                <Grid Background="{TemplateBinding Background}">
+                    <Track x:Name="PART_Track"
+                           IsDirectionReversed="True">
+
+                        <Track.DecreaseRepeatButton>
+                            <RepeatButton
+                                Command="ScrollBar.PageUpCommand"
+                                Opacity="0"
+                                Focusable="False"/>
+                        </Track.DecreaseRepeatButton>
+
+                        <Track.Thumb>
+                            <Thumb>
+                                <Thumb.Template>
+                                    <ControlTemplate TargetType="Thumb">
+                                        <Border x:Name="ThumbBorder"
+                                                Background="#41464D"
+                                                CornerRadius="5"
+                                                Margin="2,1"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver"
+                                                     Value="True">
+                                                <Setter TargetName="ThumbBorder"
+                                                        Property="Background"
+                                                        Value="#D58A36"/>
+                                            </Trigger>
+                                            <Trigger Property="IsDragging"
+                                                     Value="True">
+                                                <Setter TargetName="ThumbBorder"
+                                                        Property="Background"
+                                                        Value="#F0A34C"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Thumb.Template>
+                            </Thumb>
+                        </Track.Thumb>
+
+                        <Track.IncreaseRepeatButton>
+                            <RepeatButton
+                                Command="ScrollBar.PageDownCommand"
+                                Opacity="0"
+                                Focusable="False"/>
+                        </Track.IncreaseRepeatButton>
+
+                    </Track>
+                </Grid>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
+
+        <!-- Основной текст таблицы -->
+        <Style x:Key="VALGridTextStyle"
+       TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#D6D8D9"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+
+        <!-- Package ID -->
+        <Style x:Key="VALPackageTextStyle"
+       TargetType="TextBlock"
+       BasedOn="{StaticResource VALGridTextStyle}">
+            <Setter Property="Foreground" Value="#9299A2"/>
+            <Setter Property="FontSize" Value="11"/>
+        </Style>
+
+        <!-- Источник -->
+        <Style x:Key="VALSourceTextStyle"
+       TargetType="TextBlock"
+       BasedOn="{StaticResource VALGridTextStyle}">
+            <Setter Property="Foreground" Value="#D58A36"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
 
     </Window.Resources>
@@ -220,12 +383,14 @@
 
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock Text="VAL"
-                   FontSize="30"
-                   FontWeight="Bold"
-                   Foreground="#D58A36"/>
+           FontFamily="RimWordFont"
+           FontSize="30"
+           FontWeight="Bold"
+           Foreground="#D58A36"/>
 
                     <TextBlock Text="VANILLA AUTHENTIC LIFE"
-                   FontSize="10"
+                   FontFamily="RimWordFont"
+                   FontSize="13"
                    FontWeight="SemiBold"
                    Foreground="#9299A2"
                    Margin="2,2,0,0"/>
@@ -238,13 +403,13 @@
                         HorizontalAlignment="Right">
                 <TextBlock Text="RimWorld Mod Manager"
                            Foreground="#9299A2"
-                           FontSize="10"
+                           FontSize="18"
                            FontWeight="Bold"
                            HorizontalAlignment="Right"/>
 
-                <TextBlock Text="BETA 0.3"
+                <TextBlock Text="BETA 0.4"
                            Foreground="#D58A36"
-                           FontSize="10"
+                           FontSize="15"
                            HorizontalAlignment="Right"
                            Margin="0,5,0,0"/>
             </StackPanel>
@@ -359,37 +524,46 @@
                               PreviewMouseRightButtonDown="ModsGrid_PreviewMouseRightButtonDown">
 
                         <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem x:Name="OpenWorkshopMenuItem"
-                                          Header="Открыть в Steam Workshop"
-                                          Click="OpenWorkshop_Click"/>
+                            <ContextMenu Style="{StaticResource VALContextMenuStyle}">
 
-                                <Separator/>
+                                <MenuItem x:Name="OpenWorkshopMenuItem"
+                  Header="Открыть в Steam Workshop"
+                  Click="OpenWorkshop_Click"
+                  Style="{StaticResource VALMenuItemStyle}"/>
+
+                                <Separator Style="{StaticResource VALMenuSeparatorStyle}"/>
 
                                 <MenuItem Header="Открыть папку мода"
-                                          Click="OpenModFolder_Click"/>
+                  Click="OpenModFolder_Click"
+                  Style="{StaticResource VALMenuItemStyle}"/>
 
                                 <MenuItem Header="Копировать Package ID"
-                                          Click="CopyPackageId_Click"/>
+                  Click="CopyPackageId_Click"
+                  Style="{StaticResource VALMenuItemStyle}"/>
+
                             </ContextMenu>
                         </DataGrid.ContextMenu>
 
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="НАЗВАНИЕ"
-                                                Binding="{Binding Name}"
-                                                Width="2*"/>
+                    Binding="{Binding Name}"
+                    Width="2*"
+                    ElementStyle="{StaticResource VALGridTextStyle}"/>
 
                             <DataGridTextColumn Header="PACKAGE ID"
-                                                Binding="{Binding PackageId}"
-                                                Width="2*"/>
+                    Binding="{Binding PackageId}"
+                    Width="2*"
+                    ElementStyle="{StaticResource VALPackageTextStyle}"/>
 
                             <DataGridTextColumn Header="ВЕРСИЯ"
-                                                Binding="{Binding Version}"
-                                                Width="*"/>
+                    Binding="{Binding Version}"
+                    Width="*"
+                    ElementStyle="{StaticResource VALGridTextStyle}"/>
 
                             <DataGridTextColumn Header="ИСТОЧНИК"
-                                                Binding="{Binding Source}"
-                                                Width="*"/>
+                    Binding="{Binding Source}"
+                    Width="*"
+                    ElementStyle="{StaticResource VALSourceTextStyle}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -494,12 +668,12 @@
             <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="VANILLA AUTHENTIC LIFE"
                            Foreground="#9299A2"
-                           FontSize="9"
+                           FontSize="12"
                            FontWeight="Bold"/>
 
                 <TextBlock Text="Подготовка к запуску"
                            Foreground="#747D87"
-                           FontSize="10"
+                           FontSize="13"
                            Margin="0,3,0,0"/>
             </StackPanel>
 
