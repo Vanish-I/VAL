@@ -10,4 +10,7 @@ public class ModInfo
 
     public string PublishedFileId { get; set; } = "";
     public string PreviewPath { get; set; } = "";
+
+    // Состояние активации мода
+    public bool IsEnabled { get; set; } = true;
 }

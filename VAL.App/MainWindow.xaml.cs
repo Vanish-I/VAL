@@ -388,4 +388,12 @@ private void ModsGrid_SelectionChanged(
                 sizeof(int));
         }
     }
+
+private void ModEnabled_Click(object sender, RoutedEventArgs e)
+    {
+        settings.GamePath = gamePath ?? "";
+        settings.Mods = mods.ToList();
+
+        dataService.Save(settings);
+    }
 }

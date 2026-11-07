@@ -166,29 +166,34 @@
         <Style TargetType="DataGridRow">
             <Setter Property="Background" Value="#22262C"/>
             <Setter Property="Foreground" Value="#D6D8D9"/>
-            <Setter Property="BorderBrush" Value="#30363E"/>
+            <Setter Property="BorderBrush" Value="#41464D"/>
             <Setter Property="BorderThickness" Value="0,0,0,1"/>
-            <Setter Property="Height" Value="46"/>
+            <Setter Property="MinHeight" Value="48"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+
             <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#30363E"/>
-                </Trigger>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="#493A2B"/>
-                    <Setter Property="Foreground" Value="#FFFFFF"/>
-                </Trigger>
+
             </Style.Triggers>
         </Style>
 
         <Style TargetType="DataGridCell">
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="5,0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="#41464D"/>
+            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+
             <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="Transparent"/>
+
+                <!-- Подсветка всех ячеек строки при наведении -->
+                <DataTrigger Binding="{Binding IsMouseOver,
+            RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}"
+                     Value="True">
+                    <Setter Property="Background" Value="#493A2B"/>
                     <Setter Property="Foreground" Value="#FFFFFF"/>
-                </Trigger>
+                </DataTrigger>
+
             </Style.Triggers>
         </Style>
 
@@ -352,6 +357,111 @@
             <Setter Property="Foreground" Value="#D58A36"/>
             <Setter Property="FontSize" Value="11"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Названия модов -->
+        <Style x:Key="VALNameTextStyle"
+       TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#D6D8D9"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+
+        <!-- Техническая информация -->
+        <Style x:Key="VALTechnicalTextStyle"
+       TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="#9299A2"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+
+        <!-- Центрированный текст -->
+        <Style x:Key="VALCenteredTextStyle"
+       TargetType="TextBlock"
+       BasedOn="{StaticResource VALTechnicalTextStyle}">
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Центрированные заголовки -->
+        <Style x:Key="VALCenteredHeaderStyle"
+       TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#30363E"/>
+            <Setter Property="Foreground" Value="#9299A2"/>
+            <Setter Property="BorderBrush" Value="#41464D"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="Padding" Value="12,11"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Переключатель активации мода -->
+        <Style x:Key="VALSwitchStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Width" Value="42"/>
+            <Setter Property="Height" Value="22"/>
+            <Setter Property="Background" Value="#41464D"/>
+            <Setter Property="BorderBrush" Value="#535B65"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Focusable" Value="False"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="SwitchTrack"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="11">
+
+                            <Grid>
+                                <Ellipse x:Name="SwitchThumb"
+                                 Width="14"
+                                 Height="14"
+                                 Fill="#D6D8D9"
+                                 HorizontalAlignment="Left"
+                                 Margin="3,0,0,0"/>
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="SwitchTrack"
+                                Property="Background"
+                                Value="#D58A36"/>
+                                <Setter TargetName="SwitchTrack"
+                                Property="BorderBrush"
+                                Value="#D58A36"/>
+                                <Setter TargetName="SwitchThumb"
+                                Property="HorizontalAlignment"
+                                Value="Right"/>
+                                <Setter TargetName="SwitchThumb"
+                                Property="Margin"
+                                Value="0,0,3,0"/>
+                                <Setter TargetName="SwitchThumb"
+                                Property="Fill"
+                                Value="#17191D"/>
+                            </Trigger>
+
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="SwitchTrack"
+                                Property="BorderBrush"
+                                Value="#F0A34C"/>
+                            </Trigger>
+
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
     </Window.Resources>
@@ -407,7 +517,7 @@
                            FontWeight="Bold"
                            HorizontalAlignment="Right"/>
 
-                <TextBlock Text="BETA 0.4"
+                <TextBlock Text="BETA 0.5"
                            Foreground="#D58A36"
                            FontSize="15"
                            HorizontalAlignment="Right"
@@ -508,7 +618,7 @@
                     <DataGrid Grid.Row="1"
                               x:Name="ModsGrid"
                               AutoGenerateColumns="False"
-                              IsReadOnly="True"
+                              IsReadOnly="False"
                               Background="#22262C"
                               Foreground="#D6D8D9"
                               RowBackground="#22262C"
@@ -547,23 +657,49 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="НАЗВАНИЕ"
                     Binding="{Binding Name}"
+                    IsReadOnly="True"
                     Width="2*"
-                    ElementStyle="{StaticResource VALGridTextStyle}"/>
+                    ElementStyle="{StaticResource VALNameTextStyle}"/>
 
-                            <DataGridTextColumn Header="PACKAGE ID"
+                            <DataGridTextColumn Header="ID"
                     Binding="{Binding PackageId}"
+                    IsReadOnly="True"
                     Width="2*"
-                    ElementStyle="{StaticResource VALPackageTextStyle}"/>
+                    ElementStyle="{StaticResource VALCenteredTextStyle}"
+                    HeaderStyle="{StaticResource VALCenteredHeaderStyle}"/>
 
                             <DataGridTextColumn Header="ВЕРСИЯ"
                     Binding="{Binding Version}"
+                    IsReadOnly="True"
                     Width="*"
-                    ElementStyle="{StaticResource VALGridTextStyle}"/>
+                    ElementStyle="{StaticResource VALCenteredTextStyle}"
+                    HeaderStyle="{StaticResource VALCenteredHeaderStyle}"/>
 
                             <DataGridTextColumn Header="ИСТОЧНИК"
                     Binding="{Binding Source}"
+                    IsReadOnly="True"
                     Width="*"
-                    ElementStyle="{StaticResource VALSourceTextStyle}"/>
+                    ElementStyle="{StaticResource VALSourceTextStyle}"
+                    HeaderStyle="{StaticResource VALCenteredHeaderStyle}"/>
+
+                            <DataGridTemplateColumn Header="АКТИВЕН"
+                        Width="90"
+                        IsReadOnly="False"
+                        HeaderStyle="{StaticResource VALCenteredHeaderStyle}">
+
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ToggleButton
+    IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+    Style="{StaticResource VALSwitchStyle}"
+    HorizontalAlignment="Center"
+    VerticalAlignment="Center"
+    Click="ModEnabled_Click"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+
+                            </DataGridTemplateColumn>
+                            
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -580,7 +716,7 @@
                     Background="#22262C"
                     BorderBrush="#41464D"
                     BorderThickness="1"
-                    CornerRadius="6"
+                    CornerRadius="1"
                     Padding="16">
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
