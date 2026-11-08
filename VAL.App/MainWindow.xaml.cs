@@ -157,7 +157,7 @@ public partial class MainWindow : Window
 
 
     private void ScanMods_Click(
-        object sender, RoutedEventArgs e)
+    object sender, RoutedEventArgs e)
     {
         if (gamePath == null)
         {
@@ -165,33 +165,53 @@ public partial class MainWindow : Window
             return;
         }
 
-        mods.Clear();
+        // Запоминаем состояния уже загруженных модов
+        var enabledStates = new Dictionary<string, bool>(
+            StringComparer.OrdinalIgnoreCase);
 
-        string localMods = Path.Combine(
-            gamePath, "Mods");
-
-        foreach (var mod in scanner.Scan(
-            localMods, "Local"))
+        foreach (var mod in mods)
         {
-            mods.Add(mod);
+            string key = GetModKey(mod);
+            enabledStates[key] = mod.IsEnabled;
         }
 
-        if (workshopPath != null)
+        // Очищаем старый список
+        mods.Clear();
+
+        // Добавляем моды, сохраняя их прежние состояния
+        void AddScannedMods(IEnumerable<ModInfo> scannedMods)
         {
-            foreach (var mod in scanner.Scan(
-                workshopPath, "Workshop"))
+            foreach (var mod in scannedMods)
             {
+                string key = GetModKey(mod);
+
+                if (enabledStates.TryGetValue(key, out bool isEnabled))
+                {
+                    mod.IsEnabled = isEnabled;
+                }
+
                 mods.Add(mod);
             }
         }
-        // Сохраняем последний результат сканирования
-        settings.GamePath = gamePath ?? "";
+
+        string localMods = Path.Combine(gamePath, "Mods");
+
+        AddScannedMods(scanner.Scan(localMods, "Local"));
+
+        if (workshopPath != null)
+        {
+            AddScannedMods(scanner.Scan(workshopPath, "Workshop"));
+        }
+
+        // Сохраняем актуальную конфигурацию
+        settings.GamePath = gamePath;
         settings.Mods = mods.ToList();
 
         dataService.Save(settings);
 
-        MessageBox.Show(
-            $"Найдено модов: {mods.Count}");
+        ApplyFilters();
+
+        MessageBox.Show($"Найдено модов: {mods.Count}");
     }
 
 
@@ -396,4 +416,12 @@ private void ModEnabled_Click(object sender, RoutedEventArgs e)
 
         dataService.Save(settings);
     }
+
+    private string GetModKey(ModInfo mod)
+    {
+        return !string.IsNullOrWhiteSpace(mod.PackageId)
+            ? mod.PackageId
+            : mod.Path;
+    }
+
 }

@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Assets\Fonts\" />
     <Folder Include="Views\" />
     <Folder Include="ViewModels\" />
     <Folder Include="Resources\" />
