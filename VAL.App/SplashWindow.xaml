@@ -1,0 +1,196 @@
+<Window x:Class="VAL.App.SplashWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="VAL Launcher"
+        Width="620"
+        Height="360"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="#17191D"
+        Foreground="#D6D8D9"
+        AllowsTransparency="False"
+        ShowInTaskbar="True">
+
+    <Window.Resources>
+
+        <Style x:Key="ProgressBarStyle" TargetType="ProgressBar">
+            <Setter Property="Height" Value="5"/>
+            <Setter Property="Background" Value="#30363E"/>
+            <Setter Property="Foreground" Value="#D58A36"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Grid ClipToBounds="True">
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="3"/>
+                            <Border x:Name="PART_Track"
+                                    Background="Transparent"/>
+                            <Border x:Name="PART_Indicator"
+                                    HorizontalAlignment="Left"
+                                    Background="{TemplateBinding Foreground}"
+                                    CornerRadius="3"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <Border BorderBrush="#41464D"
+            BorderThickness="1"
+            Padding="34">
+
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Верхняя часть -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Width="58"
+                        Height="58"
+                        Background="#252A30"
+                        BorderBrush="#D58A36"
+                        BorderThickness="1"
+                        CornerRadius="4">
+
+                    <!-- Вращающаяся стрелка загрузки -->
+                    <Grid Width="40" Height="40"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center">
+
+                        <!-- Неподвижное кольцо-подложка -->
+                        <Ellipse Width="28" Height="28"
+                                 Stroke="#30363E"
+                                 StrokeThickness="3"/>
+
+                        <!-- Стрелка: дуга 270° с наконечником -->
+                        <Canvas x:Name="SpinnerArrow"
+                                Width="40" Height="40"
+                                RenderTransformOrigin="0.5,0.5">
+                            <Canvas.RenderTransform>
+                                <RotateTransform Angle="0"/>
+                            </Canvas.RenderTransform>
+
+                            <Path Data="M 20,6 A 14,14 0 1 1 6,20"
+                                  Stroke="#D58A36"
+                                  StrokeThickness="3"
+                                  StrokeStartLineCap="Round"/>
+
+                            <Path Data="M 6,11 L 0.5,20.5 L 11.5,20.5 Z"
+                                  Fill="#D58A36"
+                                  StrokeLineJoin="Round"
+                                  Stroke="#D58A36"
+                                  StrokeThickness="1"/>
+                        </Canvas>
+                    </Grid>
+
+                    <Border.Triggers>
+                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="SpinnerArrow"
+                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                                     From="0" To="360"
+                                                     Duration="0:0:1.2"
+                                                     RepeatBehavior="Forever"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Border.Triggers>
+                </Border>
+
+                <StackPanel Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Margin="16,0,0,0">
+
+                    <TextBlock Text="VAL"
+                               FontSize="27"
+                               FontWeight="Bold"
+                               Foreground="#E4E5E6"/>
+
+                    <TextBlock Text="VANILLA AUTHENTIC LIFE"
+                               FontSize="10"
+                               Foreground="#9299A2"
+                               Margin="1,2,0,0"/>
+                </StackPanel>
+
+                <TextBlock Grid.Column="2"
+                           Text="INITIALIZING"
+                           FontSize="10"
+                           Foreground="#D58A36"
+                           VerticalAlignment="Center"/>
+            </Grid>
+
+            <!-- Центральная часть -->
+            <StackPanel Grid.Row="1"
+                        VerticalAlignment="Center">
+
+                <TextBlock Text="ПОДГОТОВКА СИСТЕМЫ"
+                           FontSize="11"
+                           FontWeight="SemiBold"
+                           Foreground="#9299A2"
+                           Margin="0,0,0,12"/>
+
+                <TextBlock x:Name="StatusText"
+                           Text="Инициализация лаунчера..."
+                           FontSize="17"
+                           Foreground="#E4E5E6"
+                           Margin="0,0,0,22"/>
+
+                <ProgressBar x:Name="LoadingProgress"
+                             Minimum="0"
+                             Maximum="100"
+                             Value="0"
+                             Style="{StaticResource ProgressBarStyle}"/>
+
+                <Grid Margin="0,12,0,0">
+                    <TextBlock Text="ЗАГРУЗКА"
+                               FontSize="9"
+                               Foreground="#9299A2"/>
+
+                    <TextBlock x:Name="ProgressText"
+                               Text="0%"
+                               FontSize="11"
+                               Foreground="#D58A36"
+                               HorizontalAlignment="Right"/>
+                </Grid>
+
+            </StackPanel>
+
+            <!-- Нижняя часть -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="VAL PROJECT"
+                           FontSize="9"
+                           Foreground="#626A73"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock x:Name="VersionText"
+                           Grid.Column="1"
+                           Text="VAL LAUNCHER"
+                           FontSize="9"
+                           Foreground="#9299A2"
+                           VerticalAlignment="Center"/>
+            </Grid>
+
+        </Grid>
+    </Border>
+
+</Window>

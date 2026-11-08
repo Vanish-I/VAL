@@ -189,7 +189,7 @@
                                               VerticalScrollBarVisibility="Hidden"/>
                                 <TextBlock x:Name="Hint"
                                            Grid.Column="1"
-                                           Text="Название или Package ID"
+                                           Text="Название или ID"
                                            Foreground="{StaticResource DimBrush}"
                                            VerticalAlignment="Center"
                                            Margin="12,0,10,0"
@@ -203,6 +203,11 @@
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource MutedBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="Hint"
+            Property="Visibility"
+            Value="Collapsed"/>
                             </Trigger>
                             <Trigger Property="IsKeyboardFocusWithin" Value="True">
                                 <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
@@ -702,7 +707,7 @@
                         CornerRadius="11"
                         Padding="10,2"
                         Margin="12,0,0,0">
-                    <TextBlock Text="Beta 0.5"
+                    <TextBlock Text="Beta 1.0"
                                Foreground="{StaticResource AccentBrush}"
                                FontSize="12"
                                FontWeight="SemiBold"/>
@@ -807,53 +812,84 @@
 
         <!-- ═════════ Профиль ═════════ -->
         <Border Grid.Row="2"
-                Style="{StaticResource PanelStyle}"
-                Padding="16,10"
-                Margin="0,0,0,12">
+        Style="{StaticResource PanelStyle}"
+        Padding="16,10"
+        Margin="0,0,0,12">
+
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="230"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Border Width="3" Height="30"
-                            Background="{StaticResource AccentBrush}"
-                            CornerRadius="2"
-                            Margin="0,0,12,0"/>
+                <!-- Название и состояние профиля -->
+                <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Center">
+
+                    <Border Width="3"
+                    Height="30"
+                    Background="{StaticResource AccentBrush}"
+                    CornerRadius="2"
+                    Margin="0,0,12,0"/>
+
                     <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="Текущая конфигурация"
-                                   Foreground="{StaticResource TextBrush}"
-                                   FontSize="15"
-                                   FontWeight="SemiBold"/>
-                        <TextBlock Text="Профили модов"
-                                   Foreground="{StaticResource DimBrush}"
-                                   FontSize="12"
-                                   Margin="0,1,0,0"/>
+                        <TextBlock Text="Профиль модов"
+                           Foreground="{StaticResource TextBrush}"
+                           FontSize="15"
+                           FontWeight="SemiBold"/>
+
+                        <TextBlock x:Name="ActiveProfileText"
+                           Text="Активная конфигурация: ———"
+                           Foreground="{StaticResource DimBrush}"
+                           FontSize="12"
+                           Margin="0,1,0,0"/>
                     </StackPanel>
                 </StackPanel>
 
-                <Button Grid.Column="1"
-                        Style="{StaticResource VALButtonStyle}"
-                        IsEnabled="False"
-                        Margin="10,0,8,0"
-                        ToolTip="Скоро будет доступно">
+                <!-- Выбор профиля -->
+                <ComboBox x:Name="ProfileSelector"
+          Grid.Column="1"
+          VerticalAlignment="Center"
+          Margin="0,0,12,0"
+          SelectionChanged="ProfileSelector_SelectionChanged"
+          ToolTip="Выбрать конфигурацию модов">
+                </ComboBox>
+                
+                
+
+                <!-- Создание профиля -->
+                <Button Grid.Column="2"
+                Click="CreateProfile_Click"
+                Style="{StaticResource VALButtonStyle}"
+                Margin="0,0,8,0"
+                ToolTip="Создать новый профиль">
+
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="&#xE710;" Style="{StaticResource ButtonIconStyle}"/>
-                        <TextBlock Text="Создать профиль" VerticalAlignment="Center"/>
+                        <TextBlock Text="&#xE710;"
+                           Style="{StaticResource ButtonIconStyle}"/>
+                        <TextBlock Text="Создать профиль"
+                           VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                
+
+
+                <!-- Управление профилями -->
+                <Button Grid.Column="3"
+                Style="{StaticResource VALButtonStyle}"
+                Click="ManageProfiles_Click"
+                ToolTip="Управление профилями">
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE713;"
+                           Style="{StaticResource ButtonIconStyle}"/>
+                        <TextBlock Text="Управление"
+                           VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
 
-                <Button Grid.Column="2"
-                        Style="{StaticResource VALButtonStyle}"
-                        IsEnabled="False"
-                        ToolTip="Скоро будет доступно">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="&#xE713;" Style="{StaticResource ButtonIconStyle}"/>
-                        <TextBlock Text="Управление" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
             </Grid>
         </Border>
 
@@ -924,6 +960,43 @@
                         </DataGrid.ContextMenu>
 
                         <DataGrid.Columns>
+
+                            <DataGridTemplateColumn Header="Совмест."
+                        Width="85"
+                        IsReadOnly="True"
+                        HeaderStyle="{StaticResource VALCenteredHeaderStyle}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Ellipse Width="11"
+                     Height="11"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     StrokeThickness="1"
+                     Stroke="#17191D"
+                     ToolTip="Совместимость с текущей версией RimWorld">
+
+                                            <Ellipse.Style>
+                                                <Style TargetType="Ellipse">
+                                                    <Setter Property="Fill" Value="#9299A2"/>
+
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsCompatible}"
+                                         Value="True">
+                                                            <Setter Property="Fill" Value="#6FB26B"/>
+                                                        </DataTrigger>
+
+                                                        <DataTrigger Binding="{Binding IsCompatible}"
+                                         Value="False">
+                                                            <Setter Property="Fill" Value="#D84B4B"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Ellipse.Style>
+                                        </Ellipse>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
                             <DataGridTextColumn Header="Название"
                                                 Binding="{Binding Name}"
                                                 IsReadOnly="True"
@@ -1024,6 +1097,22 @@
                                        RenderOptions.BitmapScalingMode="HighQuality"/>
                             </Grid>
                         </Border>
+
+                        <StackPanel Margin="0,12,0,0">
+
+                            <TextBlock Text="ПОДДЕРЖИВАЕМЫЕ ВЕРСИИ RIMWORLD"
+               FontSize="10"
+               FontWeight="SemiBold"
+               Foreground="{StaticResource DimBrush}"/>
+
+                            <TextBlock x:Name="ModSupportedVersions"
+               Text="—"
+               FontSize="13"
+               Foreground="{StaticResource TextBrush}"
+               Margin="0,5,0,0"
+               TextWrapping="Wrap"/>
+
+                        </StackPanel>
 
                         <TextBlock x:Name="ModName"
                                    Text="Выберите мод в списке"

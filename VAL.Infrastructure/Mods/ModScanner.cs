@@ -35,6 +35,15 @@ public class ModScanner
                 // Ищем обложку мода
                 string previewPath = FindPreview(aboutFolder);
 
+                // Получаем поддерживаемые версии RimWorld
+                var supportedVersions = metadata
+                    .Element("supportedVersions")?
+                    .Elements("li")
+                    .Select(x => x.Value.Trim())
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Distinct()
+                    .ToList() ?? new List<string>();
+
                 // Получаем идентификатор Steam Workshop
                 string publishedFileIdPath = Path.Combine(
     aboutFolder,
@@ -71,6 +80,8 @@ public class ModScanner
                     PackageId = metadata.Element("packageId")?.Value ?? "",
 
                     Version = metadata.Element("modVersion")?.Value ?? "",
+
+                    SupportedVersions = supportedVersions,
 
                     Path = folder,
 

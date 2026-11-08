@@ -9,10 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Fonts\RimWordFont.ttf" />
     <None Remove="Assets\val-logo.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\Fonts\RimWordFont.ttf" />
     <Resource Include="Assets\val-logo.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -25,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\Fonts\" />
     <Folder Include="Views\" />
     <Folder Include="ViewModels\" />
     <Folder Include="Resources\" />
